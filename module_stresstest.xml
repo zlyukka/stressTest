@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_stresstest" default="compile.module.stresstest">
+  <dirname property="module.stresstest.basedir" file="${ant.file.module_stresstest}"/>
+  
+  <property name="module.jdk.home.stresstest" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.stresstest" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.stresstest" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.stresstest" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="stresstest.output.dir" value="${module.stresstest.basedir}/out/production/stressTest"/>
+  <property name="stresstest.testoutput.dir" value="${module.stresstest.basedir}/out/test/stressTest"/>
+  
+  <path id="stresstest.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="stresstest.module.production.classpath">
+    <path refid="${module.jdk.classpath.stresstest}"/>
+  </path>
+  
+  <path id="stresstest.runtime.production.module.classpath">
+    <pathelement location="${stresstest.output.dir}"/>
+  </path>
+  
+  <path id="stresstest.module.classpath">
+    <path refid="${module.jdk.classpath.stresstest}"/>
+    <pathelement location="${stresstest.output.dir}"/>
+  </path>
+  
+  <path id="stresstest.runtime.module.classpath">
+    <pathelement location="${stresstest.testoutput.dir}"/>
+    <pathelement location="${stresstest.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.stresstest">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.stresstest">
+    <patternset refid="excluded.from.module.stresstest"/>
+  </patternset>
+  
+  <path id="stresstest.module.sourcepath">
+    <dirset dir="${module.stresstest.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.stresstest" depends="compile.module.stresstest.production,compile.module.stresstest.tests" description="Compile module stressTest"/>
+  
+  <target name="compile.module.stresstest.production" depends="register.custom.compilers" description="Compile module stressTest; production classes">
+    <mkdir dir="${stresstest.output.dir}"/>
+    <javac2 destdir="${stresstest.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.stresstest}/javac">
+      <compilerarg line="${compiler.args.stresstest}"/>
+      <bootclasspath refid="stresstest.module.bootclasspath"/>
+      <classpath refid="stresstest.module.production.classpath"/>
+      <src refid="stresstest.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.stresstest"/>
+    </javac2>
+    
+    <copy todir="${stresstest.output.dir}">
+      <fileset dir="${module.stresstest.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.stresstest.tests" depends="register.custom.compilers,compile.module.stresstest.production" description="compile module stressTest; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.stresstest" description="cleanup module">
+    <delete dir="${stresstest.output.dir}"/>
+    <delete dir="${stresstest.testoutput.dir}"/>
+  </target>
+</project>
