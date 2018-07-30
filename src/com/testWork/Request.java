@@ -13,7 +13,6 @@ import java.util.List;
 public class Request {
     private final String USER_AGENT = "Mozilla/5.0";
     private String url;
-    public static List<Long> responseTimeList = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
@@ -62,8 +61,6 @@ public class Request {
         if(con.getResponseCode()==200){
             result=true;
         }
-
-        responseTimeList.add(System.currentTimeMillis()-startTime);
         return result;
 
     }
