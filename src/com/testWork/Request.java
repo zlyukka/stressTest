@@ -57,7 +57,6 @@ public class Request {
         //add request header
         con.setRequestProperty("User-Agent", USER_AGENT);
         boolean result=false;
-        Long startTime=System.currentTimeMillis();
         if(con.getResponseCode()==200){
             result=true;
         }
