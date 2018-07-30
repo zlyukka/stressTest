@@ -5,7 +5,7 @@ package com.testWork;
  */
 public class Constant {
     public final static String CONFIG_FILE_NAME = "config.ini";
-    public final static String URL = "http://tomcat.konex.com.ua/";
-    public final static int REQUEST_PER_SECOND=150;
-    public final static int DURATION=20;
+    public final static String URL = "https://translate.google.com.ua/";
+    public final static int REQUEST_PER_SECOND=350;
+    public final static int DURATION=10;
 }

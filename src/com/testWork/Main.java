@@ -20,7 +20,7 @@ public class Main {
         Long startTime=System.currentTimeMillis();
 
         startStressTest(resultList, request, threadPool);
-
+        //Общее время отправки всех запросов за весь временной интервал
         System.err.println(System.currentTimeMillis()-startTime);
 
         if(!threadPool.isShutdown()) {
@@ -62,17 +62,24 @@ public class Main {
         Long endBalanceTime = 0L;
         Long delay;
         List<Long> delayList = new ArrayList<>();
+        //Количество оставшихся итераций в текущем временном промежутке
         int remnantIteration = 0;
         int i = 0;
-        while (i<requestPerSecond* duration){
+        //Запускаем цикл на указанное время
+        while (i<requestPerSecond * duration){
+            //Если мы отправили последний запрос сбрасываем настройки
             if(remnantIteration<1){
                 remnantIteration=requestPerSecond;
+                //Устанавливаем конец интервала балансировки
                 endBalanceTime = System.nanoTime()+1000000000;
+                //Выводим статистику за последний интервал
                 printStatisticByList("delay time", delayList);
             }
             i++;
+            //Вызываем поток и вощвращаем результат его работы в list
             resultList.add(CompletableFuture.supplyAsync(
                     () -> request.send(), threadPool));
+            //Пересчитываем время задержки для данной итерации
             delay = countDelay(endBalanceTime, remnantIteration--);
             TimeUnit.NANOSECONDS.sleep(delay);
             delayList.add(delay/1000000);
